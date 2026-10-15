@@ -23,7 +23,7 @@ Resources:
 
   WebsiteServer:
     Type: AWS::EC2::Instance
-    CreationPolicy:
+    CreationPolicy: # this policy means don't mark the server as created until a 'ready' signal is seen.
       ResourceSignal:
         Timeout: PT10M # 10 minute timeout
     Properties:
@@ -37,7 +37,7 @@ Resources:
           #!/bin/bash
           dnf install -y httpd aws-cfn-bootstrap
           systemctl enable --now httpd
-          # send a signal if the server is complete and httpd is installed and started (or a failure signal if not)
+          # send the 'ready'/success signal if the server is complete and httpd is started (or a failure signal if not)
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebsiteServer --region ${AWS::Region} 
 
 Outputs:
