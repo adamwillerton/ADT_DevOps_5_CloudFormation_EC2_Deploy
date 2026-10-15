@@ -23,7 +23,7 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --template-file cloudformation/ec2-website.yaml \
+            --template-file cloudformation/ec2-webserver.yaml \
             --stack-name ec2-website \
             --no-fail-on-empty-changeset  # stops the step from failing when the template hasn't changed.
 
