@@ -25,7 +25,8 @@ jobs:
           aws cloudformation deploy \
             --template-file cloudformation/ec2-webserver.yaml \
             --stack-name ec2-website \
-            --no-fail-on-empty-changeset  # stops the step from failing when the template hasn't changed.
+            # stop the step from failing when the template hasn't changed.
+            --no-fail-on-empty-changeset  
 
       - name: Get Public IP
         run: |
@@ -42,13 +43,9 @@ jobs:
 
       - name: Copy Website to Server
         run: |
-          until ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i key.pem ec2-user@$IP "echo ready"; do
-            echo "Waiting for server to accept SSH..."
-            sleep 10
-          done
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@$IP "cloud-init status --wait && mkdir -p ~/website"
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@$IP "mkdir -p ~/website"
           scp -o StrictHostKeyChecking=no -i key.pem -r website/* ec2-user@$IP:~/website/
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@$IP "sudo cp -r ~/website/* /var/www/html/"
-
+          
       - name: Show Website URL
         run: echo "http://$IP"
