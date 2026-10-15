@@ -25,7 +25,6 @@ jobs:
           aws cloudformation deploy \
             --template-file cloudformation/ec2-webserver.yaml \
             --stack-name ec2-website \
-            # stop the step from failing when the template hasn't changed.
             --no-fail-on-empty-changeset  
 
       - name: Get Public IP
